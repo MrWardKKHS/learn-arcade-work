@@ -7,7 +7,7 @@ WIDTH = 1000
 HEIGHT = 1000
 DEAD_ZONE = 0.2
 
-laser_sound = arcade.load_sound(os.path.join("C:\\","Users", "award", "dev", "learn-arcade-work", "Lab 07 - User Control", 'laser.ogg'))
+# laser_sound = arcade.load_sound(os.path.join("C:\\","Users", "award", "dev", "learn-arcade-work", "Lab 07 - User Control", 'laser.ogg'))
 
 class Game(arcade.Window):
     def __init__(self, width, height, title):
@@ -24,7 +24,6 @@ class Game(arcade.Window):
         else:
             print("There are no joysticks.")
             self.joystick = None
-        print(self.joystick.__dict__)
 
 
     def on_mouse_press(self, x, y, button, modifiers):
