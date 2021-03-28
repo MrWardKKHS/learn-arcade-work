@@ -4,6 +4,9 @@ import arcade
 
 WIDTH = 1000
 HEIGHT = 1000
+DEAD_ZONE = 0.2
+
+laser_sound = arcade.load_sound("./laser.ogg")
 
 class Game(arcade.Window):
     def __init__(self, width, height, title):
@@ -13,9 +16,18 @@ class Game(arcade.Window):
         self.ball = Ball(width/2, height/2)
         arcade.set_background_color(arcade.color.HANSA_YELLOW)
         self.set_mouse_visible(False)
+        joysticks = arcade.get_joysticks()
+        if joysticks:
+            self.joystick = joysticks[0]
+            self.joystick.open()
+        else:
+            print("There are no joysticks.")
+            self.joystick = None
+        print(self.joystick.__dict__)
 
 
     def on_mouse_press(self, x, y, button, modifiers):
+        arcade.play_sound(laser_sound)
         if button == arcade.MOUSE_BUTTON_LEFT:
             self.ball.radius += 3
             self.ball.color = (randint(0,255), randint(0,255), randint(0,255), 255)
@@ -29,7 +41,7 @@ class Game(arcade.Window):
         self.ball.draw()
 
     def update(self, dt):
-        self.ball.update()
+        self.ball.update(self.joystick)
     
     def on_mouse_motion(self, x, y, dx, dy):
         self.ball.x = x
@@ -65,9 +77,11 @@ class Ball():
         self.color = arcade.color.RICH_CARMINE
         self.radius = 25
 
-    def update(self):
-        self.x += self.vel_x
-        self.y += self.vel_y
+    def update(self, joystick):
+        if abs(joystick.x) > DEAD_ZONE:
+            self.x += joystick.x * 10
+        if abs(joystick.y) > DEAD_ZONE:
+            self.y += joystick.y * -10
 
 
     def draw(self):
