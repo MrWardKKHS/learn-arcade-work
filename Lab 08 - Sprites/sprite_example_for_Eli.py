@@ -2,6 +2,7 @@ import arcade
 import random
 from math import atan2, degrees, sin, cos
 from opensimplex import OpenSimplex
+from pathlib import Path
 
 WIDTH = 1000
 HEIGHT = 1000
@@ -35,14 +36,14 @@ class Game(arcade.Window):
         self.coin_list = arcade.SpriteList()
         self.player_list = arcade.SpriteList()
         self.score = 0
-        self.player_sprite = arcade.Sprite(r'PNG\Soldier\Poses\soldier_stand.png')
+        self.player_sprite = arcade.Sprite(Path('./PNG/Soldier/Poses/soldier_stand.png'))
         self.player_sprite.center_x = WIDTH/2
         self.player_sprite.center_y = HEIGHT/2
         self.player_list.append(self.player_sprite)
 
-        self.coin_sprite = arcade.Sprite(r"C:\Users\award\dev\learn-arcade-work\coin.png")
+        self.coin_sprite = arcade.Sprite(Path("coin.png"))
         for i in range(100):
-            coin = Coin(r"C:\Users\award\dev\learn-arcade-work\coin.png", 0.1)
+            coin = Coin(Path("coin.png"), 0.1)
             coin.center_x = random.randint(-500, WIDTH + 500)
             coin.center_y = random.randint(-500, HEIGHT + 500)
             coin.noise = i * 100
