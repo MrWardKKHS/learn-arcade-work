@@ -44,7 +44,7 @@ class MyGame(arcade.Window):
         self.player_sprite.center_y = 300
         self.player_list.append(self.player_sprite)
 
-        self.load_map('./Maps/platformer.tmx')
+        self.load_map('./Maps/level1.tmx')
 
     def load_map(self, resource):
         platforms_layer_name = 'Platforms'
@@ -64,6 +64,7 @@ class MyGame(arcade.Window):
             arcade.set_background_color(my_map.background_color)
 
         self.physics_engine = arcade.PhysicsEnginePlatformer(self.player_sprite, self.wall_list, GRAVITY)
+    
     def scroll(self):
         changed = False
 

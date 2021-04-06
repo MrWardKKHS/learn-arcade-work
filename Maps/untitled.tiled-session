@@ -6,19 +6,44 @@
     "activeFile": "",
     "expandedProjectPaths": [
     ],
+    "file.lastUsedOpenFilter": "All Files (*)",
     "fileStates": {
         "/Users/Alex/my_tiles.tsx": {
             "dynamicWrapping": true,
             "scaleInDock": 1,
             "scaleInEditor": 1
+        },
+        "level1.tmx": {
+            "scale": 0.30244140625,
+            "selectedLayer": 2,
+            "viewCenter": {
+                "x": 1601.9631901840494,
+                "y": 1732.5670003228931
+            }
+        },
+        "level2.tmx": {
+            "scale": 0.21,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 1430.9523809523812,
+                "y": 804.7619047619048
+            }
+        },
+        "platformer.tmx": {
+            "scale": 0.17,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 3338.235294117647,
+                "y": 1935.294117647059
+            }
         }
     },
-    "map.height": 20,
+    "map.height": 15,
     "map.lastUsedFormat": "tmx",
     "map.layerDataFormat": null,
     "map.tileHeight": 128,
     "map.tileWidth": 128,
-    "map.width": 25,
+    "map.width": 200,
     "openFiles": [
     ],
     "project": "untitled.tiled-project",
