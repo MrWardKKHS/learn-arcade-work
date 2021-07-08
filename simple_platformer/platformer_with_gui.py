@@ -1,5 +1,9 @@
 import arcade
 from threading import Timer
+import arcade.gui
+from arcade.gui.manager import UIManager
+from arcade.window_commands import get_viewport
+from pyglet import window
 
 WIDTH = 800
 HEIGHT = 800
@@ -79,9 +83,9 @@ class Player(arcade.Sprite):
         self.cur_texture_index = self.cur_texture_index % len(self.walk_textures)
         self.texture = self.walk_textures[self.cur_texture_index][self.facing_direction]
 
-class MyGame(arcade.Window):
+class MyGame(arcade.View):
     def __init__(self):
-        super().__init__(WIDTH, HEIGHT, TITLE)
+        super().__init__()
         self.coin_list = None
         self.wall_list = None
         self.player_list = None
@@ -92,10 +96,13 @@ class MyGame(arcade.Window):
         self.score = 0
         self.level = 1
         self.end_of_map = 0
+        self.ui_manager = arcade.gui.UIManager()
+        # self.ui_manager.adjust_mouse_coordinates = self.camera.mouse_coordinates_to_world
 
         arcade.set_background_color(arcade.color.CORNFLOWER_BLUE)
 
     def setup(self, level):
+        self.ui_manager.purge_ui_elements()
         self.view_bottom = 0
         self.view_left = 0
         self.score = 0
@@ -110,7 +117,28 @@ class MyGame(arcade.Window):
 
         self.load_map(f'./Maps/level{level}.tmx')
         self.physics_engine = arcade.PhysicsEnginePlatformer(self.player_sprite, self.wall_list, GRAVITY)
+        self.setupUI()
 
+    def setupUI(self):
+        button = SettingsButton(
+            center_x=100,
+            center_y=100,
+            text='settings'
+        )
+        self.ui_manager.add_ui_element(button)
+        button_normal = arcade.load_texture(':resources:gui_basic_assets/red_button_normal.png')
+        hovered_texture = arcade.load_texture(':resources:gui_basic_assets/red_button_hover.png')
+        pressed_texture = arcade.load_texture(':resources:gui_basic_assets/red_button_press.png')
+        button = arcade.gui.UIImageButton(
+            center_x=350,
+            center_y=100,
+            normal_texture=button_normal,
+            hover_texture=hovered_texture,
+            press_texture=pressed_texture,
+            text='UIImageButton'
+        )
+        self.ui_manager.add_ui_element(button)
+        
 
     def load_map(self, resource):
         platforms_layer_name = 'Platforms'
@@ -183,6 +211,10 @@ class MyGame(arcade.Window):
             WIDTH + self.view_left - 1, 
             self.view_bottom, 
             HEIGHT + self.view_bottom - 1)
+            for i, element in enumerate(self.ui_manager._ui_elements):
+                element.center_x = self.view_left + 150 * (i +1)
+                element.center_y = self.view_bottom + HEIGHT - 100
+                element.draw_hit_box()
     
     def on_draw(self):
         arcade.start_render()
@@ -191,9 +223,12 @@ class MyGame(arcade.Window):
         self.dont_touch_list.draw()
         self.player_list.draw()
         self.foreground_list.draw()
+        for i, element in enumerate(self.ui_manager._ui_elements):
+            element.draw_hit_box()
 
         score_text = f"Score: {self.score}"
         arcade.draw_text(score_text, 10 + self.view_left, 10 + self.view_bottom, arcade.csscolor.WHITE, 18)
+        
 
     def on_key_press(self, key, modifiers):
         if key == arcade.key.UP or key == arcade.key.W:
@@ -238,7 +273,53 @@ class MyGame(arcade.Window):
             self.setup(self.level)
 
         self.scroll()
+        
 
-window = MyGame()
-window.setup(window.level)
+    # def on_show_view(self):
+    #     self.setupUI()
+
+
+
+
+class ReturnButton(arcade.gui.UIImageButton):
+    def __init__(self):
+            button_normal = arcade.load_texture(':resources:gui_basic_assets/red_button_normal.png')
+            hovered_texture = arcade.load_texture(':resources:gui_basic_assets/red_button_hover.png')
+            pressed_texture = arcade.load_texture(':resources:gui_basic_assets/red_button_press.png')
+     
+            text='return'
+            super().__init__(button_normal, hovered_texture, pressed_texture, 400, 400, text)
+    
+    def on_click(self):
+        window.show_view(game)
+        game.ui_manager.purge_ui_elements()
+        game.setupUI()
+
+class SettingsMenu(arcade.View):
+    def __init__(self):
+        super().__init__()
+
+    def on_draw(self):
+        arcade.start_render()
+
+    def on_show_view(self):
+        self.setup()
+
+    def setup(self):
+        game.ui_manager.purge_ui_elements()
+
+        button = ReturnButton()
+        game.ui_manager.add_ui_element(button)
+
+class SettingsButton(arcade.gui.UIFlatButton):
+    
+    def on_click(self):
+        settings = SettingsMenu()
+        window.show_view(settings)
+
+
+window = arcade.Window(WIDTH, HEIGHT, TITLE)
+game = MyGame()
+game.setup(game.level)
+window.show_view(game)
 arcade.run()

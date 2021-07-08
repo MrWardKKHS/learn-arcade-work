@@ -15,7 +15,6 @@ arcade.finish_render()
 arcade.run()
 
 # USE AS MANY OF THESE AS POSSIBLE
-# Drawing Primitives
 # draw_arc_filled
 # draw_arc_outline
 # draw_circle_filled
